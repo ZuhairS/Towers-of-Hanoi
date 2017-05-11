@@ -41,4 +41,83 @@
 
 class TowersOfHanoi
 
+  attr_reader :towers
+
+  def initialize
+    @towers = [[3, 2, 1], [], []]
+  end
+
+  def play
+    puts "Welcome to Towers of Hanoi: The Game."
+    until won?
+      puts "Please enter the pile from which you would like to select a tower (0 to 2):"
+      from_tower = gets.chomp.to_i
+      from_tower = check_value(from_tower)
+
+      puts "Now please enter the pile to which you would like to insert the selected tower (0 to 2):"
+      to_tower = gets.chomp.to_i
+      to_tower = check_value(to_tower)
+
+      if valid_move?(from_tower, to_tower)
+        move(from_tower, to_tower)
+      else
+        puts "That is not a valid move, please ensure the first pile is not empty"
+        puts " and you are not moving a larger tower on top of a smaller tower."
+      end
+      puts render
+    end
+    puts render
+    puts "Congratulations! You have won the game."
+  end
+
+  def render
+    puts "First Pile"
+    puts "[]" * towers[0][2].to_i
+    puts "[]" * towers[0][1].to_i
+    puts "[]" * towers[0][0].to_i
+    puts ""
+
+    puts "Second Pile"
+    puts "[]" * towers[1][2].to_i
+    puts "[]" * towers[1][1].to_i
+    puts "[]" * towers[1][0].to_i
+    puts ""
+
+    puts "Third Pile"
+    puts "[]" * towers[2][2].to_i
+    puts "[]" * towers[2][1].to_i
+    puts "[]" * towers[2][0].to_i
+    puts ""
+  end
+
+  def won?
+    towers[1].size == 3 || towers[2].size == 3
+  end
+
+  def valid_move?(from_tower, to_tower)
+    if towers[from_tower].empty?
+      false
+    elsif !towers[to_tower].empty? && towers[from_tower].last > towers[to_tower].last
+      false
+    else true
+    end
+  end
+
+  def move(from_tower, to_tower)
+    towers[to_tower] << towers[from_tower].pop
+  end
+
+  def check_value(input)
+    if input > 2 || input < 0
+      puts "Out of range. Please enter a number ranging from 0 to 2."
+      input = gets.chomp.to_i
+    end
+    input
+  end
+
+end
+
+if __FILE__ == $PROGRAM_NAME
+  new_game = TowersOfHanoi.new
+  new_game.play
 end
